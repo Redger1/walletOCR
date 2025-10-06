@@ -13,7 +13,7 @@ public enum CategoryKind: String, CaseIterable, Codable, Sendable {
     case entertainment = "Развлечения"
     case other = "Другое"
     
-    var iconName: String {
+    public var iconName: String {
         switch self {
             case .entertainment: "gamecontroller"
             case .food: "fork.knife"

@@ -10,7 +10,7 @@ let package = Package(
         .package(path: "../PersistenceKit")
     ],
     targets: [
-        .target(name: "BudgetEngine"),
+        .target(name: "BudgetEngine", dependencies: ["CoreTypes"]),
         .testTarget(name: "BudgetEngineTests", dependencies: ["BudgetEngine"])
     ]
 )

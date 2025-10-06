@@ -53,10 +53,9 @@ final class AppCoordinator {
     
     // TRANSACTIONS
     @ViewBuilder func buildTransaction() -> some View {
-        VStack {
-            Button("Open details") { self.go(.details(UUID())) }
-        }
-        .navigationTitle("Transaction")
+        let vm = TransactionViewModel(transactionRepository: container.transactionRepository)
+        
+        TransactionView(viewModel: vm).navigationTitle("Транзакции")
     }
     @ViewBuilder func destination(for route: TransactionRoute) -> some View {
         switch route {
@@ -73,7 +72,7 @@ final class AppCoordinator {
             calculator: container.budgetCalculator
         )
         
-        BudgetView(viewModel: vm)
+        BudgetView(viewModel: vm).navigationTitle("Бюджет")
     }
     @ViewBuilder func destination(for route: BudgetRoute) -> some View {
         switch route {

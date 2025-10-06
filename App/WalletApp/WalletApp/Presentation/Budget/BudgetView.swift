@@ -40,12 +40,11 @@ struct BudgetView: View {
                     if viewModel.filteredTransactions.isEmpty {
                         Text("Нет транзакций для выбранного бюджета")
                     } else {
-                        ForEach(viewModel.filteredTransactions, id: \.id) { tx in
+                        ForEach(viewModel.filteredTransactions, id: \.id) { transaction in
                             HStack {
-                                Text(verbatim: "\(MoneyFormatter.string(tx.total))")
+                                Text(transaction.categoryKind.rawValue)
                                 Spacer()
-                                Text(viewModel.categoryName(for: tx.categoryID))
-                                    .foregroundStyle(.secondary)
+                                Image(systemName: transaction.categoryKind.iconName)
                             }
                         }
                     }
