@@ -11,9 +11,9 @@ public struct ReceiptItem: Codable, Sendable, Hashable, Identifiable {
     public var quantity: Int?
     public var total: Money?
     public var unitPrice: Money?
-    public var predictedCategory: Category.ID?
+    public var predictedCategory: CategoryKind?
     
-    public init(quantity: Int? = nil, total: Money? = nil, unitPrice: Money? = nil, predictedCategory: Category.ID? = nil) {
+    public init(quantity: Int? = nil, total: Money? = nil, unitPrice: Money? = nil, predictedCategory: CategoryKind? = nil) {
         self.id = UUID()
         self.quantity = quantity
         self.total = total

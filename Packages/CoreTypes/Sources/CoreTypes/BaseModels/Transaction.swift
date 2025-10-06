@@ -24,7 +24,7 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
     public let id: UUID
     public var date: Date
     public var total: Money
-    public var categoryID: Category.ID
+    public var categoryKind: CategoryKind
     public var receiptID: Receipt.ID?
     public var merchantID: Merchant.ID?
     public var paymentMethod: PaymentMethod?
@@ -33,7 +33,7 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
     
     public init(
         date: Date,
-        categoryID: Category.ID,
+        categoryKind: CategoryKind,
         receiptID: Receipt.ID? = nil,
         merchantID: Merchant.ID? = nil,
         total: Money,
@@ -43,7 +43,7 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
     ) {
         self.id = UUID()
         self.date = date
-        self.categoryID = categoryID
+        self.categoryKind = categoryKind
         self.receiptID = receiptID
         self.merchantID = merchantID
         self.total = total
@@ -52,10 +52,10 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
         self.note = note
     }
     
-    public init(date: Date, categoryID: Category.ID, total: Money, paymentMethod: PaymentMethod, note: String) {
+    public init(date: Date, categoryKind: CategoryKind, total: Money, paymentMethod: PaymentMethod, note: String) {
         self.id = UUID()
         self.date = date
-        self.categoryID = categoryID
+        self.categoryKind = categoryKind
         self.total = total
         self.paymentMethod = paymentMethod
         self.note = note

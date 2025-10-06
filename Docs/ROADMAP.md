@@ -11,9 +11,9 @@
 
 ### День 2 — CoreTypes + In-Memory repo
 - [x] Модели Transaction/Money/Category
-- [ ] Добавить фикстуры и BudgetCalculator
-- [ ] Реализовать протоколы репозиториев (TransactionRepository, BudgetRepository)
-- [ ] InMemoryTransactionsRepository (save/fetch/delete/observe)
+- [x] Добавить фикстуры и BudgetCalculator
+- [x] Реализовать протоколы репозиториев (TransactionRepository, BudgetRepository)
+- [x] InMemoryTransactionsRepository (save/fetch/delete/observe)
 
 ### День 3 — Dummy OCR → Review → Save
 - [ ] OCRService (заглушка)

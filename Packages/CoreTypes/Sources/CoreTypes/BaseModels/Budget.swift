@@ -20,15 +20,17 @@ public enum Period: String, Codable, Hashable, Sendable {
 
 public struct Budget: Identifiable, Hashable, Codable, Sendable {
     public let id: UUID
-    public var categoryScope: [Category.ID]
+    public var name: String
+    public var categoryScope: Set<CategoryKind>
     public var amount: Money
     public var periodInterval: DateIntervalEx?
     public var startDate: Date
     public var rolloverRule: RolloverRule
     public var period: Period = .monthly
     
-    public init(categoryScope: [Category.ID], amount: Money, periodInterval: DateIntervalEx? = nil, startDate: Date, rolloverRule: RolloverRule, period: Period = .monthly) {
+    public init(name: String, categoryScope: Set<CategoryKind>, amount: Money, periodInterval: DateIntervalEx? = nil, startDate: Date, rolloverRule: RolloverRule, period: Period = .monthly) {
         self.id = UUID()
+        self.name = name
         self.categoryScope = categoryScope
         self.amount = amount
         self.periodInterval = periodInterval
@@ -43,9 +45,9 @@ public struct BudgetSnapshot: Hashable, Codable, Sendable {
     public var planned: Money
     public var spent: Money
     public var remaining: Money
-    public var progress: Double
+    public var progress: Decimal
     
-    public init(period: DateIntervalEx, planned: Money, spent: Money, remaining: Money, progress: Double) {
+    public init(period: DateIntervalEx, planned: Money, spent: Money, remaining: Money, progress: Decimal) {
         self.period = period
         self.planned = planned
         self.spent = spent

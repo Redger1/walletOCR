@@ -6,14 +6,20 @@
 //
 import Foundation
 
-public struct Category: Codable, Hashable, Identifiable, Sendable {
-    public let id: UUID
-    public var name: String
-    public var iconName: String
+public enum CategoryKind: String, CaseIterable, Codable, Sendable {
+    case food = "Еда"
+    case transfer = "Перевод"
+    case health = "Здоровье"
+    case entertainment = "Развлечения"
+    case other = "Другое"
     
-    public init(name: String, iconName: String) {
-        self.id = UUID()
-        self.name = name
-        self.iconName = iconName
+    var iconName: String {
+        switch self {
+            case .entertainment: "gamecontroller"
+            case .food: "fork.knife"
+            case .health: "stethoscope"
+            case .transfer: "arrow.down.left.arrow.up.right"
+            case .other: "cart"
+        }
     }
 }
