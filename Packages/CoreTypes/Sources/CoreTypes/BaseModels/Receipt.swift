@@ -7,7 +7,7 @@
 import Foundation
 
 public struct ReceiptItem: Codable, Sendable, Hashable, Identifiable {
-    public var id: UUID
+    public let id: UUID
     public var quantity: Int?
     public var total: Money?
     public var unitPrice: Money?

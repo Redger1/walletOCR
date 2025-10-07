@@ -9,6 +9,7 @@ import SwiftUI
 import CoreTypes
 import BudgetEngine
 import Observation
+import VisionOCRKit
 
 enum AppEnvironment {
     case mock, prod
@@ -23,9 +24,17 @@ final class AppContainer {
     
     let environment: AppEnvironment
     
+    // Сканирование
+    let scanService: ScanService
+    let classifier: CategoryClassifying
+    
     init(environment: AppEnvironment = .mock) {
         self.environment = environment
         self.budgetCalculator = BudgetCalculator()
+        
+        // Сканирование
+        self.scanService = ScanServiceMock()
+        self.classifier = RuleBasedClassifier()
         
         // Добавить в будущем switch environment, когда реализую SwiftDataRepository
         self.transactionRepository = InMemoryTransactionRepository(initial: Fixtures.sampleTransaction())

@@ -67,7 +67,7 @@ final class BudgetViewModel {
     func budgetTitle(_ budget: Budget) -> String {
         if budget.categoryScope.isEmpty { return "Все категории" }
         return budget.categoryScope
-            .map { $0.rawValue }
+            .map { $0.title }
             .sorted()
             .joined(separator: ", ")
     }

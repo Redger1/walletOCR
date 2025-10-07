@@ -22,4 +22,6 @@ public enum CategoryKind: String, CaseIterable, Codable, Sendable {
             case .other: "cart"
         }
     }
+    
+    public var title: String { self.rawValue }
 }

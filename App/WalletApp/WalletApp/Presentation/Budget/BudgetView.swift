@@ -42,7 +42,7 @@ struct BudgetView: View {
                     } else {
                         ForEach(viewModel.filteredTransactions, id: \.id) { transaction in
                             HStack {
-                                Text(transaction.categoryKind.rawValue)
+                                Text(transaction.categoryKind.title)
                                 Spacer()
                                 Image(systemName: transaction.categoryKind.iconName)
                             }

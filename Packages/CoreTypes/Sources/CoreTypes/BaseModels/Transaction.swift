@@ -6,18 +6,22 @@
 //
 import Foundation
 
-public enum PaymentMethod: String, Hashable, Sendable, Codable {
+public enum PaymentMethod: String, Hashable, Sendable, Codable, CaseIterable {
     case card = "Карта"
     case cash = "Наличные"
     case transfer = "Перевод"
     case other = "Другое"
+    
+    public var title: String { self.rawValue }
 }
 
-public enum TransactionStatus: String, Sendable, Hashable, Codable {
-    case pending   // черновик
-    case posted    // готовая
-    case corrected // исправлен
-    case deleted   // помечена как удаленная
+public enum TransactionStatus: String, Sendable, Hashable, Codable, CaseIterable {
+    case pending = "Черновик"   // черновик
+    case posted = "Готово"    // готовая
+    case corrected = "Отредактирован" // исправлен
+    case deleted = "Удален"   // помечена как удаленная
+    
+    public var title: String { self.rawValue }
 }
 
 public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
@@ -26,7 +30,7 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
     public var total: Money
     public var categoryKind: CategoryKind
     public var receiptID: Receipt.ID?
-    public var merchantID: Merchant.ID?
+    public var merchant: String?
     public var paymentMethod: PaymentMethod?
     public var status: TransactionStatus?
     public var note: String?
@@ -35,7 +39,7 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
         date: Date,
         categoryKind: CategoryKind,
         receiptID: Receipt.ID? = nil,
-        merchantID: Merchant.ID? = nil,
+        merchant: String? = nil,
         total: Money,
         paymentMethod: PaymentMethod? = nil,
         status: TransactionStatus? = nil,
@@ -45,7 +49,7 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
         self.date = date
         self.categoryKind = categoryKind
         self.receiptID = receiptID
-        self.merchantID = merchantID
+        self.merchant = merchant
         self.total = total
         self.paymentMethod = paymentMethod
         self.status = status

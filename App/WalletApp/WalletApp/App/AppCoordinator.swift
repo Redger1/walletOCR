@@ -7,6 +7,7 @@
 import Foundation
 import Observation
 import SwiftUI
+import VisionOCRKit
 
 enum Tab: String, Codable, Hashable {
     case home, transactions, budget, settings
@@ -39,15 +40,30 @@ final class AppCoordinator {
     @ViewBuilder func buildHome() -> some View {
         VStack {
             Button("Open scan")     { self.go(.scan) }
-            Button("Open review")   { self.go(.review(UUID())) }
             Button("Open settings") { self.switchTab(.settings) }
         }
         .navigationTitle("Home")
     }
     @ViewBuilder func destination(for route: HomeRoute) -> some View {
         switch route {
-            case .scan: ScanView() { self.popHome() }
-            case .review(let id): ReviewView(id: id) { self.popHome() }
+            case .scan: ScanView() {
+                Task {
+                    let draft = await self.container.scanService.scan()
+                    self.go(.review(draft))
+                }
+            }
+            case .review(let draft):
+                let vm = ReviewViewModel(
+                    draft: draft,
+                    classifier: container.classifier,
+                    transactionRepo: container.transactionRepository
+                )
+                
+                ReviewView(reviewVM: vm) {
+                    self.homePath.removeAll()
+                } goBack: {
+                    self.popHome()
+                }
         }
     }
     

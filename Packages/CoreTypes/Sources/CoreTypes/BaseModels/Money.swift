@@ -7,8 +7,8 @@
 import Foundation
 
 public struct Money: Codable, Hashable, Sendable {
-    public let value: Decimal
-    public let currency: Currency
+    public var value: Decimal
+    public var currency: Currency
     
     public init(value: Decimal, currency: Currency) {
         self.value = value

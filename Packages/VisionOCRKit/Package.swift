@@ -11,7 +11,7 @@ let package = Package(
         .package(path: "../FeatureFlags"),
     ],
     targets: [
-        .target(name: "VisionOCRKit"),
+        .target(name: "VisionOCRKit", dependencies: ["CoreTypes"]),
         .testTarget(name: "VisionOCRKitTests", dependencies: ["VisionOCRKit"])
     ]
 )

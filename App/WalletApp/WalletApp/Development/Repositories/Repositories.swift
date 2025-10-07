@@ -25,7 +25,7 @@ actor InMemoryTransactionRepository: TransactionRepository {
     }
     
     func fetchAll() async -> [TransactionItem] {
-        return storage
+        storage
     }
     func add(_ transaction: TransactionItem) async {
         storage.append(transaction)

@@ -7,12 +7,13 @@
 import SwiftUI
 
 struct ScanView: View {
-    var goBack: () -> Void
+    var openReview: () -> Void
     
     var body: some View {
         VStack {
-            Text("ASDASD")
-            Button("Return") { goBack() }
+            Button("Симулировать скан") {
+                openReview()
+            }
         }
     }
 }

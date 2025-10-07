@@ -18,21 +18,23 @@ struct TransactionView: View {
     var body: some View {
         VStack {
             List {
-                ForEach(viewModel.transactions, id: \.id) { item in
+                ForEach(viewModel.sortedTransactions, id: \.id) { item in
                     VStack(alignment: .leading) {
                         HStack {
                             Text(MoneyFormatter.string(item.total))
                             Spacer()
                             HStack(alignment: .center, spacing: 10) {
-                                Text(item.categoryKind.rawValue)
+                                Text(item.categoryKind.title)
                                 Image(systemName: item.categoryKind.iconName)
                             }
                         }
                         
                         HStack {
-                            Text(item.paymentMethod?.rawValue ?? "")
+                            Text(item.paymentMethod?.title ?? "")
                             Spacer()
-                            Text(item.date, style: .date)
+                            Text(item.date, format: .dateTime.day().month().year())
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
                         }
                         
                         if let note = item.note {
@@ -40,13 +42,24 @@ struct TransactionView: View {
                         }
                     }
                 }
+                .onDelete { indexSet in
+                    Task {
+                        for idx in indexSet {
+                            await viewModel.deleteTransaction(viewModel.sortedTransactions[idx])
+                        }
+                    }
+                }
             }
-            
-            Button("Добавить новую транзакцию") { showModal.toggle() }
+            .refreshable { await viewModel.load() }
         }
         .task { await viewModel.load() }
         .sheet(isPresented: $showModal) {
-            VStack {
+            ModalCreateView(viewModel: viewModel, showModal: $showModal)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { showModal.toggle() }
+                label: { Image(systemName: "plus") }
             }
         }
     }

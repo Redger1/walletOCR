@@ -5,8 +5,9 @@
 //  Created by Артем on 06.10.2025.
 //
 import Foundation
+import VisionOCRKit
 
 enum HomeRoute: Hashable {
     case scan
-    case review(UUID)
+    case review(OCRDraft)
 }
