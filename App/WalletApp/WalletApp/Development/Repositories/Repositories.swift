@@ -7,16 +7,6 @@
 import Foundation
 import CoreTypes
 
-protocol TransactionRepository {
-    func fetchAll() async -> [TransactionItem]
-    func add(_ transaction: TransactionItem) async
-    func delete(_ transaction: TransactionItem) async
-}
-
-protocol BudgetRepository {
-    func fetchAll() async -> [Budget]
-}
-
 actor InMemoryTransactionRepository: TransactionRepository {
     private var storage: [TransactionItem] = []
     

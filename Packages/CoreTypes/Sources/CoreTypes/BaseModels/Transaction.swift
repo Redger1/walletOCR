@@ -7,21 +7,35 @@
 import Foundation
 
 public enum PaymentMethod: String, Hashable, Sendable, Codable, CaseIterable {
-    case card = "Карта"
-    case cash = "Наличные"
-    case transfer = "Перевод"
-    case other = "Другое"
+    case card
+    case cash
+    case transfer
+    case other
     
-    public var title: String { self.rawValue }
+    public var title: String {
+        switch self {
+            case .card: "Карта"
+            case .cash: "Наличные"
+            case .transfer: "Перевод"
+            case .other: "Другое"
+        }
+    }
 }
 
 public enum TransactionStatus: String, Sendable, Hashable, Codable, CaseIterable {
-    case pending = "Черновик"   // черновик
-    case posted = "Готово"    // готовая
-    case corrected = "Отредактирован" // исправлен
-    case deleted = "Удален"   // помечена как удаленная
+    case pending
+    case posted
+    case corrected
+    case deleted
     
-    public var title: String { self.rawValue }
+    public var title: String {
+        switch self {
+            case .pending: "Черновик"
+            case .posted: "Готово"
+            case .corrected: "Отредактирован"
+            case .deleted: "Удален"
+        }
+    }
 }
 
 public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {

@@ -10,6 +10,8 @@ import CoreTypes
 import BudgetEngine
 import Observation
 import VisionOCRKit
+import SwiftData
+import PersistenceKit
 
 enum AppEnvironment {
     case mock, prod
@@ -28,6 +30,9 @@ final class AppContainer {
     let scanService: ScanService
     let classifier: CategoryClassifying
     
+    private let modelContainer: ModelContainer
+    private let modelContext: ModelContext
+    
     init(environment: AppEnvironment = .mock) {
         self.environment = environment
         self.budgetCalculator = BudgetCalculator()
@@ -36,8 +41,23 @@ final class AppContainer {
         self.scanService = ScanServiceMock()
         self.classifier = RuleBasedClassifier()
         
-        // Добавить в будущем switch environment, когда реализую SwiftDataRepository
-        self.transactionRepository = InMemoryTransactionRepository(initial: Fixtures.sampleTransaction())
-        self.budgetRepository = InMemoryBudgetRepository(initial: [Fixtures.foodBudget, Fixtures.taxiBudget])
+        // Подумать, можно ли (и нужно ли) убрать force unwrap
+        switch environment {
+            case .mock:
+                let config = ModelConfiguration(isStoredInMemoryOnly: true)
+                self.modelContainer = try! ModelContainer(for: SDBudget.self, SDTransaction.self, configurations: config)
+                self.modelContext = modelContainer.mainContext
+                migrateLegacyEnumsIfNeeded(context: modelContext)
+                
+                self.transactionRepository = InMemoryTransactionRepository(initial: Fixtures.sampleTransaction())
+                self.budgetRepository      = InMemoryBudgetRepository(initial: [Fixtures.foodBudget, Fixtures.taxiBudget])
+            case .prod:
+                self.modelContainer = try! ModelContainer(for: SDBudget.self, SDTransaction.self)
+                self.modelContext = modelContainer.mainContext
+                migrateLegacyEnumsIfNeeded(context: modelContext)
+                
+                self.transactionRepository = SwiftDataTransactionRepository(context: modelContext)
+                self.budgetRepository      = SwiftDataBudgetRepository(context: modelContext)
+        }
     }
 }

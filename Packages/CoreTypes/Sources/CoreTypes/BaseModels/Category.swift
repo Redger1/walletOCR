@@ -7,11 +7,11 @@
 import Foundation
 
 public enum CategoryKind: String, CaseIterable, Codable, Sendable {
-    case food = "Еда"
-    case transfer = "Перевод"
-    case health = "Здоровье"
-    case entertainment = "Развлечения"
-    case other = "Другое"
+    case food
+    case transfer
+    case health
+    case entertainment
+    case other
     
     public var iconName: String {
         switch self {
@@ -23,5 +23,13 @@ public enum CategoryKind: String, CaseIterable, Codable, Sendable {
         }
     }
     
-    public var title: String { self.rawValue }
+    public var title: String {
+        switch self {
+            case .food: "Еда"
+            case .entertainment: "Развлечения"
+            case .health: "Здоровье"
+            case .transfer: "Перевод"
+            case .other: "Другое"
+        }
+    }
 }

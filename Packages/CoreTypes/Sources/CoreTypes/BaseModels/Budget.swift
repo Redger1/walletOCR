@@ -11,11 +11,25 @@ public enum RolloverRule: String, Codable, Hashable, Sendable {
     case none
     case carryOver
     case capAtLimit
+    
+    public var title: String {
+        switch self {
+            case .none: "none"
+            case .carryOver: "carry over"
+            case .capAtLimit: "cap at limi"
+        }
+    }
 }
 
 // В будущем расширить периоды - неделя, день, год и тд
 public enum Period: String, Codable, Hashable, Sendable {
     case monthly
+    
+    public var title: String {
+        switch self {
+            case .monthly: "Месяц"
+        }
+    }
 }
 
 public struct Budget: Identifiable, Hashable, Codable, Sendable {
