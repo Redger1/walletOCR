@@ -28,6 +28,7 @@ public final class SwiftDataTransactionRepository: TransactionRepository {
         do {
             let dto = SDTransaction()
             transaction.fillDTO(dto)
+            context.insert(dto)
             try context.save()
         } catch {
             assertionFailure("SwiftData add failed: \(error)")

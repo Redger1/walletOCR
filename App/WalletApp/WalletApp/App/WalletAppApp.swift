@@ -8,7 +8,7 @@ import SwiftUI
 
 @main
 struct WalletAppApp: App {
-    let appContainer = AppContainer(environment: .mock)
+    let appContainer = AppContainer(environment: .prod)
     let coordinator: AppCoordinator
     
     init() {
