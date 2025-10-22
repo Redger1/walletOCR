@@ -53,6 +53,16 @@ final class BudgetViewModel {
         await load()
     }
     
+    func addBudget(_ budget: Budget) async {
+        await budgetRepository.add(budget)
+        await load()
+    }
+    
+    func updateBudget(_ budget: Budget) async {
+        await budgetRepository.update(budget)
+        await load()
+    }
+    
     func selectBudget(_ id: UUID) { currentBudgetId = id }
     
     var filteredTransactions: [TransactionItem] {
@@ -64,7 +74,7 @@ final class BudgetViewModel {
         .sorted { $0.date > $1.date }
     }
     
-    func budgetTitle(_ budget: Budget) -> String {
+    func budgetCategories(_ budget: Budget) -> String {
         if budget.categoryScope.isEmpty { return "Все категории" }
         return budget.categoryScope
             .map { $0.title }

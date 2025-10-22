@@ -10,35 +10,62 @@ import CoreTypes
 struct ModalCreateView: View {
     let viewModel: TransactionViewModel
     @Binding var showModal: Bool
+    @Binding var editableTx: TransactionItem?
     
-    init(viewModel: TransactionViewModel, showModal: Binding<Bool>) {
+    init(viewModel: TransactionViewModel, showModal: Binding<Bool>, editableTx: Binding<TransactionItem?>) {
         self.viewModel = viewModel
         self._showModal = showModal
+        self._editableTx = editableTx
     }
     
-    @State private var date: Date = Date()
-    @State private var category: CategoryKind = .other
     @State private var merchantName: String = ""
     @State private var totalPrice: String = ""
-    @State private var paymentMethod: PaymentMethod = .card
+    @State private var category: CategoryKind = .other
     @State private var status: TransactionStatus = .pending
+    @State private var paymentMethod: PaymentMethod = .card
+    @State private var date: Date = Date()
     @State private var note: String = ""
     
     private func onAddTransaction() async {
         guard let total = Decimal(string: totalPrice), total > 0 else { return }
         
-        let itemToCreate = TransactionItem(
-            date: date,
-            categoryKind: category,
-            merchant: merchantName.isEmpty ? nil : merchantName,
-            total: Money(value: total, currency: .rub),
-            paymentMethod: paymentMethod,
-            status: status,
-            note: note.isEmpty ? nil : note
-        )
-        
-        await viewModel.addTransaction(itemToCreate)
+        if let editableTx {
+            let itemToEdit = TransactionItem(
+                id: editableTx.id,
+                date: date,
+                categoryKind: category,
+                receiptID: editableTx.receiptID,
+                merchant: merchantName,
+                total: Money(value: total, currency: .rub),
+                paymentMethod: paymentMethod,
+                status: status,
+                note: note.isEmpty ? nil : note
+            )
+            await viewModel.updateTransaction(itemToEdit)
+        } else {
+            let itemToCreate = TransactionItem(
+                date: date,
+                categoryKind: category,
+                merchant: merchantName.isEmpty ? nil : merchantName,
+                total: Money(value: total, currency: .rub),
+                paymentMethod: paymentMethod,
+                status: status,
+                note: note.isEmpty ? nil : note
+            )
+            await viewModel.addTransaction(itemToCreate)
+        }
         showModal = false
+    }
+    
+    private func fillEditableIfNeeded() {
+        guard let editableTx else { return }
+        merchantName = editableTx.merchant ?? ""
+        totalPrice = editableTx.total.value.description
+        category = editableTx.categoryKind
+        status = editableTx.status ?? .pending
+        paymentMethod = editableTx.paymentMethod ?? .card
+        date = editableTx.date
+        note = editableTx.note ?? ""
     }
     
     var body: some View {
@@ -51,7 +78,7 @@ struct ModalCreateView: View {
                 ForEach(CategoryKind.allCases, id: \.self) { category in
                     HStack(alignment: .center, spacing: 10) {
                         Image(systemName: category.iconName)
-                        Text(category.rawValue)
+                        Text(category.title)
                         Spacer()
                     }
                 }
@@ -86,5 +113,6 @@ struct ModalCreateView: View {
             .disabled(totalPrice.isEmpty)
         }
         .padding()
+        .onAppear { fillEditableIfNeeded() }
     }
 }

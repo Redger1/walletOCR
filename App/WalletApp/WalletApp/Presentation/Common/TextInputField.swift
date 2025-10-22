@@ -23,7 +23,7 @@ struct TextInputField: View {
         TextField(placeholder, text: $value)
             .padding()
             .background(.regularMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
             .focused($isInputActive)
             .onSubmit {
                 if !ignoreSubmit { isInputActive = false }

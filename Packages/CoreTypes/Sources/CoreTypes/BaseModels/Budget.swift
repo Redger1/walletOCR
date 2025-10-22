@@ -7,22 +7,22 @@
 import Foundation
 
 // Что делать с остатком в следующем периоде
-public enum RolloverRule: String, Codable, Hashable, Sendable {
+public enum RolloverRule: String, Codable, Hashable, Sendable, CaseIterable {
     case none
     case carryOver
     case capAtLimit
     
     public var title: String {
         switch self {
-            case .none: "none"
-            case .carryOver: "carry over"
-            case .capAtLimit: "cap at limi"
+            case .none: "Не выбран"
+            case .carryOver: "Перенести на след. месяц"
+            case .capAtLimit: "Сбросить"
         }
     }
 }
 
 // В будущем расширить периоды - неделя, день, год и тд
-public enum Period: String, Codable, Hashable, Sendable {
+public enum Period: String, Codable, Hashable, Sendable, CaseIterable {
     case monthly
     
     public var title: String {
@@ -42,8 +42,8 @@ public struct Budget: Identifiable, Hashable, Codable, Sendable {
     public var rolloverRule: RolloverRule
     public var period: Period = .monthly
     
-    public init(name: String, categoryScope: Set<CategoryKind>, amount: Money, periodInterval: DateIntervalEx? = nil, startDate: Date, rolloverRule: RolloverRule, period: Period = .monthly) {
-        self.id = UUID()
+    public init(id: UUID = UUID(), name: String, categoryScope: Set<CategoryKind>, amount: Money, periodInterval: DateIntervalEx? = nil, startDate: Date, rolloverRule: RolloverRule, period: Period = .monthly) {
+        self.id = id
         self.name = name
         self.categoryScope = categoryScope
         self.amount = amount

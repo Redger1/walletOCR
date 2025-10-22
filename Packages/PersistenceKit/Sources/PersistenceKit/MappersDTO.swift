@@ -17,9 +17,10 @@ extension SDTransaction {
         let st = statusRaw.flatMap(TransactionStatus.init(rawValue:)) ?? .pending
  
         return TransactionItem(
+            id: id,
             date: date,
             categoryKind: cat,
-            total: Money(value: Decimal(totalValue), currency: Currency(code: totalCurrency, symbol: "р")),
+            total: Money(value: Decimal(totalValue), currency: Currency(code: totalCurrency, symbol: "₽")),
             paymentMethod: pm,
             status: st,
             note: note
@@ -38,53 +39,34 @@ extension TransactionItem {
         dto.statusRaw = (status ?? .pending).rawValue
         dto.note = note
     }
-//    func toDTO(in context: ModelContext) -> SDTransaction {
-//        let dto = SDTransaction(context: context)
-//        dto.id = id
-//        dto.date = date
-//        dto.totalValue = NSDecimalNumber(decimal: total.value).doubleValue
-//        dto.totalCurrency = total.currency.code
-//        dto.categoryRaw = categoryKind.rawValue
-//        dto.merchant = merchant
-//        dto.paymentMethodRaw = (paymentMethod ?? .other).rawValue
-//        dto.statusRaw = (status ?? .pending).rawValue
-//        dto.note = note
-//        return dto
-//    }
 }
 
 extension SDBudget {
     func toDomain() -> Budget {
-        var categoriesSet = Set<CategoryKind>()
-        for categoryRaw in categoryScopeRaw {
-            categoriesSet.insert(CategoryKind(rawValue: categoryRaw)!)
-        }
+        let categories = Set(categoryScopeRaw.flatMap { CategoryKind(rawValue: $0) ?? .other })
         
         return Budget(
+            id: id,
             name: name,
-            categoryScope: categoriesSet,
+            categoryScope: categories,
             amount: Money(value: Decimal(amountValue), currency: Currency(code: amountCurrency, symbol: amountCurrencySymbol)),
-            periodInterval: DateIntervalEx(start: periodStart!, end: periodEnd!),
+            periodInterval: DateIntervalEx(start: periodStart ?? .now, end: periodEnd ?? .now),
             startDate: startDate,
-            rolloverRule: RolloverRule(rawValue: rolloverRuleRaw)!,
-            period: Period(rawValue: periodRaw)!
+            rolloverRule: RolloverRule(rawValue: rolloverRuleRaw) ?? .capAtLimit,
+            period: Period(rawValue: periodRaw) ?? .monthly
         )
     }
 }
 extension Budget {
-    func toDTO() -> SDBudget {
-        SDBudget(
-            id: id,
-            name: name,
-            categoryScopeRaw: categoryScope.map {$0.title},
-            amountValue: NSDecimalNumber(decimal: amount.value).doubleValue,
-            amountCurrency: amount.currency.code,
-            amountCurrencySymbol: amount.currency.symbol,
-            periodStart: periodInterval?.start,
-            periodEnd: periodInterval?.end,
-            startDate: startDate,
-            rolloverRuleRaw: rolloverRule.title,
-            periodRaw: period.title
-        )
+    func fillDTO(_ dto: SDBudget) {
+        dto.id = id
+        dto.name = name
+        dto.amountCurrency = amount.currency.code
+        dto.amountValue = NSDecimalNumber(decimal: amount.value).doubleValue
+        dto.amountCurrencySymbol = amount.currency.symbol
+        dto.categoryScopeRaw = categoryScope.map { $0.rawValue }
+        dto.rolloverRuleRaw = rolloverRule.rawValue
+        dto.periodRaw = period.rawValue
+        dto.startDate = startDate
     }
 }

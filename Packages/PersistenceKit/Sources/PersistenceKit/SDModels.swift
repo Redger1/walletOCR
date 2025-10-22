@@ -40,30 +40,32 @@ public final class SDTransaction {
 
 @Model
 public final class SDBudget {
-    @Attribute(.unique) public var id: UUID
-    var name: String
-    var categoryScopeRaw: [String]
-    var amountValue: Double
-    var amountCurrency: String
-    var amountCurrencySymbol: String
-    var periodStart: Date?
-    var periodEnd: Date?
-    var startDate: Date
-    var rolloverRuleRaw: String
-    var periodRaw: String
+    @Attribute(.unique) public var id: UUID = UUID()
+    var name: String = ""
+    var categoryScopeRaw: [String] = []
+    var amountValue: Double = 0
+    var amountCurrency: String = ""
+    var amountCurrencySymbol: String = ""
+    var periodStart: Date? = nil
+    var periodEnd: Date? = nil
+    var startDate: Date = Date.now
+    var rolloverRuleRaw: String = ""
+    var periodRaw: String = ""
     
-    public init(id: UUID, name: String, categoryScopeRaw: [String], amountValue: Double, amountCurrency: String, amountCurrencySymbol: String,
-                periodStart: Date?, periodEnd: Date?, startDate: Date, rolloverRuleRaw: String, periodRaw: String) {
-        self.id = id
-        self.name = name
-        self.categoryScopeRaw = categoryScopeRaw
-        self.amountValue = amountValue
-        self.amountCurrency = amountCurrency
-        self.amountCurrencySymbol = amountCurrencySymbol
-        self.periodStart = periodStart
-        self.periodEnd = periodEnd
-        self.startDate = startDate
-        self.rolloverRuleRaw = rolloverRuleRaw
-        self.periodRaw = periodRaw
-    }
+    init() {}
+    
+//    public init(id: UUID, name: String, categoryScopeRaw: [String], amountValue: Double, amountCurrency: String, amountCurrencySymbol: String,
+//                periodStart: Date?, periodEnd: Date?, startDate: Date, rolloverRuleRaw: String, periodRaw: String) {
+//        self.id = id
+//        self.name = name
+//        self.categoryScopeRaw = categoryScopeRaw
+//        self.amountValue = amountValue
+//        self.amountCurrency = amountCurrency
+//        self.amountCurrencySymbol = amountCurrencySymbol
+//        self.periodStart = periodStart
+//        self.periodEnd = periodEnd
+//        self.startDate = startDate
+//        self.rolloverRuleRaw = rolloverRuleRaw
+//        self.periodRaw = periodRaw
+//    }
 }

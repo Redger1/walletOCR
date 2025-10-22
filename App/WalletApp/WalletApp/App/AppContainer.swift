@@ -41,10 +41,11 @@ final class AppContainer {
         self.scanService = ScanServiceMock()
         self.classifier = RuleBasedClassifier()
         
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        
         // Подумать, можно ли (и нужно ли) убрать force unwrap
         switch environment {
             case .mock:
-                let config = ModelConfiguration(isStoredInMemoryOnly: true)
                 self.modelContainer = try! ModelContainer(for: SDBudget.self, SDTransaction.self, configurations: config)
                 self.modelContext = modelContainer.mainContext
                 migrateLegacyEnumsIfNeeded(context: modelContext)
@@ -52,7 +53,7 @@ final class AppContainer {
                 self.transactionRepository = InMemoryTransactionRepository(initial: Fixtures.sampleTransaction())
                 self.budgetRepository      = InMemoryBudgetRepository(initial: [Fixtures.foodBudget, Fixtures.taxiBudget])
             case .prod:
-                self.modelContainer = try! ModelContainer(for: SDBudget.self, SDTransaction.self)
+                self.modelContainer = try! ModelContainer(for: SDBudget.self, SDTransaction.self, configurations: config)
                 self.modelContext = modelContainer.mainContext
                 migrateLegacyEnumsIfNeeded(context: modelContext)
                 

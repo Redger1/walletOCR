@@ -32,5 +32,16 @@ final class TransactionViewModel {
         await load()
     }
     
+    func updateTransaction(_ transaction: TransactionItem) async {
+        await transactionRepository.update(transaction)
+        await load()
+    }
+    
     var sortedTransactions: [TransactionItem] { transactions.sorted { $0.date > $1.date } }
+    
+    var totalSpentMoney: Decimal {
+        transactions.reduce(0, { accum, transaction in
+            return accum + transaction.total.value
+        })
+    }
 }

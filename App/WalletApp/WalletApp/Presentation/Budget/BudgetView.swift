@@ -6,66 +6,64 @@
 //
 import SwiftUI
 import CoreTypes
+import DesignSystem
 
 struct BudgetView: View {
     @State private var viewModel: BudgetViewModel
-    @State private var selectedScope: Set<CategoryKind> = [.food, .health]
+    @State private var showModal: Bool = false
+    @State private var editableBudget: Budget? = nil
     
     init(viewModel: BudgetViewModel) {
         _viewModel = State(wrappedValue: viewModel)
     }
     
     var body: some View {
-        VStack {
-            Picker("Бюджет", selection: $viewModel.currentBudgetId) {
-                ForEach(viewModel.budgets, id: \.id) { budget in
-                    Text(viewModel.budgetTitle(budget))
-                        .tag(Optional(budget.id))
-                }
-            }
-            
-            List {
-                Section("Текущий бюджет") {
-                    if let snapshot = viewModel.snapshot {
-                        Text(verbatim: "Лимит: \(MoneyFormatter.string(snapshot.planned))")
-                        Text(verbatim: "Потрачено: \(MoneyFormatter.string(snapshot.spent))")
-                        Text(verbatim: "Осталось: \(MoneyFormatter.string(snapshot.remaining))")
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                if let snapshot = viewModel.snapshot {
+                    VStack(alignment: .leading) {
+                        Text("Осталось")
+                            .font(.system(size: 22, weight: .medium))
+                        Text(MoneyFormatter.string(snapshot.remaining))
+                            .font(.system(size: 32, weight: .bold))
+                        Text("Лимит \(MoneyFormatter.string(snapshot.planned)) потрачено \(MoneyFormatter.string(snapshot.spent))")
+                            .font(.system(size: 18, weight: .medium))
+                            .opacity(0.5)
+                        
                         ProgressView(value: Double(truncating: snapshot.progress as NSNumber), total: 1)
-                    } else {
-                        Text("Бюджет не выбран")
+                            .tint(.indigo)
                     }
+                    .capsuleBackground()
                 }
                 
-                Section("Транзакции") {
-                    if viewModel.filteredTransactions.isEmpty {
-                        Text("Нет транзакций для выбранного бюджета")
-                    } else {
-                        ForEach(viewModel.filteredTransactions, id: \.id) { transaction in
-                            HStack {
-                                Text(transaction.categoryKind.title)
-                                Spacer()
-                                Image(systemName: transaction.categoryKind.iconName)
-                            }
-                        }
-                    }
+                BudgetSelector(viewModel: viewModel, showModal: $showModal, editableBudget: $editableBudget)
+                
+                if let snapshot = viewModel.snapshot {
+                    CircularBudgetProgress(snapshot: snapshot)
                 }
                 
-                Button("Добавить моковую транзакцию") {
-                    Task {
-                        await viewModel.addTransaction(Fixtures.makeRandomTransaction())
-                    }
-                }
-                Button("Удалить моковую транзакцию") {
-                    Task {
-                        guard let lastTransaction = viewModel.transactions.last else { return }
-                        await viewModel.deleteTransaction(lastTransaction)
+                Text("Транзакции")
+                    .font(.system(size: 22, weight: .medium))
+                if viewModel.filteredTransactions.isEmpty {
+                    Text("Нет транзакций для выбранного бюджета")
+                } else {
+                    ForEach(viewModel.filteredTransactions, id: \.id) { transaction in
+                        TransactionListItem(transaction: transaction, formattedMoney: MoneyFormatter.string(transaction.total))
                     }
                 }
             }
         }
+        .contentMargins(20)
         .navigationTitle("Бюджет")
-        .task {
-            await viewModel.load()
+        .task { await viewModel.load() }
+        .sheet(isPresented: $showModal) {
+            CreateBudgetView(viewModel: viewModel, showModal: $showModal, editableBudget: editableBudget)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { showModal.toggle() }
+                label: { Image(systemName: "plus") }
+            }
         }
     }
 }

@@ -50,6 +50,7 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
     public var note: String?
     
     public init(
+        id: UUID = UUID(),
         date: Date,
         categoryKind: CategoryKind,
         receiptID: Receipt.ID? = nil,
@@ -59,7 +60,7 @@ public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
         status: TransactionStatus? = nil,
         note: String? = nil
     ) {
-        self.id = UUID()
+        self.id = id
         self.date = date
         self.categoryKind = categoryKind
         self.receiptID = receiptID

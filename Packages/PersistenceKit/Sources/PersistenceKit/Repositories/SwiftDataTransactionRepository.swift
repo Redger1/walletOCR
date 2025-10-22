@@ -46,4 +46,26 @@ public final class SwiftDataTransactionRepository: TransactionRepository {
             assertionFailure("SwiftData delete failed: \(error)")
         }
     }
+    
+    public func update(_ transaction: TransactionItem) async {
+        do {
+            let pred = #Predicate<SDTransaction> { $0.id == transaction.id }
+            if let existing = try context.fetch(FetchDescriptor<SDTransaction>(predicate: pred)).first {
+                existing.date = transaction.date
+                existing.totalCurrency = transaction.total.currency.code
+                existing.totalValue = NSDecimalNumber(decimal: transaction.total.value).doubleValue
+                existing.categoryRaw = transaction.categoryKind.rawValue
+                existing.merchant = transaction.merchant
+                existing.paymentMethodRaw = transaction.paymentMethod?.rawValue
+                existing.statusRaw = transaction.status?.rawValue
+                existing.note = transaction.note
+                
+                try context.save()
+            } else {
+                print("Cant find tx with and id: \(transaction.id)")
+            }
+        } catch {
+            assertionFailure("SwiftData update failed: \(error)")
+        }
+    }
 }

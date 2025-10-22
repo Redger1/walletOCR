@@ -23,6 +23,9 @@ actor InMemoryTransactionRepository: TransactionRepository {
     func delete(_ transaction: TransactionItem) async {
         storage = storage.filter { $0.id != transaction.id }
     }
+    func update(_ transaction: TransactionItem) async {
+        print("Update")
+    }
 }
 
 actor InMemoryBudgetRepository: BudgetRepository {
@@ -37,5 +40,14 @@ actor InMemoryBudgetRepository: BudgetRepository {
     }
     func fetchById(by id: UUID) async -> Budget? {
         budgets.first(where: { $0.id == id })
+    }
+    func add(_ budget: Budget) async {
+        budgets.append(budget)
+    }
+    func delete(_ budget: Budget) async {
+        budgets = budgets.filter { $0.id != budget.id }
+    }
+    func update(_ budget: Budget) async {
+        print("Update")
     }
 }
