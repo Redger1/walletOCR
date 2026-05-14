@@ -1,8 +1,8 @@
 # walletOCR
 
-A modular iOS wallet application focused on expense tracking and OCR-based receipt scanning.
+A modular iOS wallet application focused on expense tracking and OCR-based receipt scanning
 
-The project is built using a package-oriented architecture with separated feature and infrastructure layers.
+The project is built using a package-oriented architecture with separated feature and infrastructure layers
 
 ## Features
 
@@ -17,20 +17,20 @@ The project is built using a package-oriented architecture with separated featur
 
 ## Architecture
 
-The application is split into multiple internal Swift Packages to keep features isolated and reusable.
+The application is split into multiple internal Swift Packages to keep features isolated and reusable
 
 Current modules include:
 
-- VisionOCRKit
-- BudgetEngine
-- PersistenceKit
-- LoggingKit
-- AnalyticsKit
-- DesignSystem
-- CoreTypes
-- FeatureFlags
+- `VisionOCRKit`
+- `BudgetEngine`
+- `PersistenceKit`
+- `LoggingKit`
+- `AnalyticsKit`
+- `DesignSystem`
+- `CoreTypes`
+- `FeatureFlags`
 
-The app layer is responsible only for composition and presentation logic, while business and infrastructure logic are extracted into independent modules.
+The app layer is responsible only for composition and presentation logic, while business and infrastructure logic are extracted into independent modules
 
 ## Tech Stack
 
@@ -42,6 +42,7 @@ The app layer is responsible only for composition and presentation logic, while 
 - Modular architecture
 
 ## Project Structure
+```bash
 App/
 └── Wallet application layer
 
@@ -52,15 +53,18 @@ Packages/
 ├── DesignSystem
 ├── LoggingKit
 ├── AnalyticsKit
-└── CoreTypes## Current Status
+└── CoreTypes
+```
 
-The project is functional and demonstrates a complete modular application structure with OCR integration and feature separation.
+## Current Status
 
-The architecture is still evolving, and some areas are planned for future improvements, including:
+The project is functional and demonstrates a modular application structure with OCR integration and feature separation
+
+The architecture is still evolving, with several planned improvements:
 
 - advanced OCR processing
 - synchronization
 - improved analytics
 - test coverage
 - additional budgeting features
-- production-level persistence optimizations
+- persistence optimizations
