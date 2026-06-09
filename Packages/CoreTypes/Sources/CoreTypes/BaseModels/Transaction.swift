@@ -38,6 +38,22 @@ public enum TransactionStatus: String, Sendable, Hashable, Codable, CaseIterable
     }
 }
 
+public enum TransactionPeriodFilter: String, CaseIterable, Identifiable {
+    case all
+    case currentMonth
+    case lastWeek
+    
+    public var id: Self { self }
+    
+    public var title: String {
+        switch self {
+            case .all: "All"
+            case .currentMonth: "Current month"
+            case .lastWeek: "Last week"
+        }
+    }
+}
+
 public struct TransactionItem: Identifiable, Hashable, Sendable, Codable {
     public let id: UUID
     public var date: Date

@@ -51,6 +51,8 @@ public final class SwiftDataTransactionRepository: TransactionRepository {
         do {
             let pred = #Predicate<SDTransaction> { $0.id == transaction.id }
             if let existing = try context.fetch(FetchDescriptor<SDTransaction>(predicate: pred)).first {
+                print("UPDATE, название магазина:", existing.merchant, transaction.merchant)
+                
                 existing.date = transaction.date
                 existing.totalCurrency = transaction.total.currency.code
                 existing.totalValue = NSDecimalNumber(decimal: transaction.total.value).doubleValue

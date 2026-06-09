@@ -65,6 +65,11 @@ final class BudgetViewModel {
     
     func selectBudget(_ id: UUID) { currentBudgetId = id }
     
+    func deleteBudget(_ budget: Budget) async {
+        await budgetRepository.delete(budget)
+        await load()
+    }
+    
     var filteredTransactions: [TransactionItem] {
         guard let s = snapshot, let budget = budgets.first(where: { $0.id == currentBudgetId }) else { return [] }
         return transactions.filter { tx in
@@ -75,7 +80,7 @@ final class BudgetViewModel {
     }
     
     func budgetCategories(_ budget: Budget) -> String {
-        if budget.categoryScope.isEmpty { return "Все категории" }
+        if budget.categoryScope.isEmpty { return "All categories" }
         return budget.categoryScope
             .map { $0.title }
             .sorted()

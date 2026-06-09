@@ -34,17 +34,17 @@ struct CircularBudgetProgress: View {
             
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Запланировано:").opacity(0.6)
+                    Text("Planned:").opacity(0.6)
                     Spacer()
                     Text(MoneyFormatter.string(snapshot.planned))
                 }
                 HStack {
-                    Text("Потрачено:").opacity(0.6)
+                    Text("Spent:").opacity(0.6)
                     Spacer()
                     Text(MoneyFormatter.string(snapshot.spent))
                 }
                 HStack {
-                    Text("Остаток:").opacity(0.6)
+                    Text("Left:").opacity(0.6)
                     Spacer()
                     Text(MoneyFormatter.string(snapshot.remaining))
                 }

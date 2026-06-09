@@ -53,10 +53,10 @@ final class AppContainer {
                 self.transactionRepository = InMemoryTransactionRepository(initial: Fixtures.sampleTransaction())
                 self.budgetRepository      = InMemoryBudgetRepository(initial: [Fixtures.foodBudget, Fixtures.taxiBudget])
             case .prod:
-                self.modelContainer = try! ModelContainer(for: SDBudget.self, SDTransaction.self, configurations: config)
+                self.modelContainer = try! ModelContainer(for: SDBudget.self, SDTransaction.self)
                 self.modelContext = modelContainer.mainContext
                 migrateLegacyEnumsIfNeeded(context: modelContext)
-                
+                    
                 self.transactionRepository = SwiftDataTransactionRepository(context: modelContext)
                 self.budgetRepository      = SwiftDataBudgetRepository(context: modelContext)
         }

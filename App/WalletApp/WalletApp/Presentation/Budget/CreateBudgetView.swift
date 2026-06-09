@@ -11,7 +11,7 @@ import CoreTypes
 struct CreateBudgetView: View {
     var viewModel: BudgetViewModel
     @Binding var showModal: Bool
-    var editableBudget: Budget?
+    @Binding var editableBudget: Budget?
     @State private var name: String = ""
     @State private var rollOverRuleSelection: RolloverRule = .carryOver
     @State private var selectedCategories: Set<CategoryKind> = []
@@ -55,11 +55,11 @@ struct CreateBudgetView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            TextInputField("Название", value: $name)
-            TextInputField("Бюджет (руб.)", value: $moneyAmount)
+            TextInputField("Title", value: $name)
+            TextInputField("Budget (rub.)", value: $moneyAmount)
                 .keyboardType(.numberPad)
             
-            DatePicker("Дата начала", selection: $startDate)
+            DatePicker("Start date", selection: $startDate)
                 .datePickerStyle(.compact)
             
             List {
@@ -82,13 +82,13 @@ struct CreateBudgetView: View {
                 }
             }.listStyle(.plain)
             
-            Picker("Правила переноса", selection: $rollOverRuleSelection) {
+            Picker("Rollover rule", selection: $rollOverRuleSelection) {
                 ForEach(RolloverRule.allCases, id: \.self) { item in
                     Text(item.title).tag(item)
                 }
             }
             
-            Button("Добавить бюджет") {
+            Button(editableBudget == nil ? "Add budget" : "Change budget") {
                 Task { await createBudget() }
             }
         }

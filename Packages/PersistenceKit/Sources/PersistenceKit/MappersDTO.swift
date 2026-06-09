@@ -20,6 +20,7 @@ extension SDTransaction {
             id: id,
             date: date,
             categoryKind: cat,
+            merchant: merchant,
             total: Money(value: Decimal(totalValue), currency: Currency(code: totalCurrency, symbol: "₽")),
             paymentMethod: pm,
             status: st,

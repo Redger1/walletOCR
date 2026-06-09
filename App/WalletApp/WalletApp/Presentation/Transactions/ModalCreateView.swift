@@ -102,7 +102,7 @@ struct ModalCreateView: View {
             TextInputField("Заметки", value: $note)
                 .lineLimit(5...10)
             
-            Button("Добавить+") {
+            Button(editableTx != nil ? "Изменить" : "Добавить") {
                 Task { @MainActor in
                     await onAddTransaction()
                 }

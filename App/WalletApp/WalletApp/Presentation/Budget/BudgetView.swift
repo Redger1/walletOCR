@@ -20,13 +20,27 @@ struct BudgetView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
+                BudgetSelector(viewModel: viewModel)
+                
+                if let currentBudget = viewModel.budgets.first(where: { $0.id == viewModel.currentBudgetId }) {
+                    HStack {
+                        Button {
+                            editableBudget = currentBudget
+                            showModal.toggle()
+                        } label: { Text("Edit") }
+                        
+                        Button { Task { await viewModel.deleteBudget(currentBudget) } }
+                        label: { Text("Delete") }
+                    }
+                }
+                
                 if let snapshot = viewModel.snapshot {
                     VStack(alignment: .leading) {
-                        Text("Осталось")
+                        Text("Left")
                             .font(.system(size: 22, weight: .medium))
                         Text(MoneyFormatter.string(snapshot.remaining))
                             .font(.system(size: 32, weight: .bold))
-                        Text("Лимит \(MoneyFormatter.string(snapshot.planned)) потрачено \(MoneyFormatter.string(snapshot.spent))")
+                        Text("Limit \(MoneyFormatter.string(snapshot.planned)) потрачено \(MoneyFormatter.string(snapshot.spent))")
                             .font(.system(size: 18, weight: .medium))
                             .opacity(0.5)
                         
@@ -36,16 +50,14 @@ struct BudgetView: View {
                     .capsuleBackground()
                 }
                 
-                BudgetSelector(viewModel: viewModel, showModal: $showModal, editableBudget: $editableBudget)
-                
                 if let snapshot = viewModel.snapshot {
                     CircularBudgetProgress(snapshot: snapshot)
                 }
                 
-                Text("Транзакции")
+                Text("Transactions")
                     .font(.system(size: 22, weight: .medium))
                 if viewModel.filteredTransactions.isEmpty {
-                    Text("Нет транзакций для выбранного бюджета")
+                    Text("No transactions for selected budget")
                 } else {
                     ForEach(viewModel.filteredTransactions, id: \.id) { transaction in
                         TransactionListItem(transaction: transaction, formattedMoney: MoneyFormatter.string(transaction.total))
@@ -54,14 +66,17 @@ struct BudgetView: View {
             }
         }
         .contentMargins(20)
-        .navigationTitle("Бюджет")
+        .navigationTitle("Budget")
         .task { await viewModel.load() }
         .sheet(isPresented: $showModal) {
-            CreateBudgetView(viewModel: viewModel, showModal: $showModal, editableBudget: editableBudget)
+            CreateBudgetView(viewModel: viewModel, showModal: $showModal, editableBudget: $editableBudget)
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button { showModal.toggle() }
+                Button {
+                    editableBudget = nil
+                    showModal.toggle()
+                }
                 label: { Image(systemName: "plus") }
             }
         }
