@@ -25,11 +25,11 @@ public enum CategoryKind: String, CaseIterable, Codable, Sendable {
     
     public var title: String {
         switch self {
-            case .food: "Еда"
-            case .entertainment: "Развлечения"
-            case .health: "Здоровье"
-            case .transfer: "Перевод"
-            case .other: "Другое"
+            case .food: "Food"
+            case .entertainment: "Entertainments"
+            case .health: "Healt"
+            case .transfer: "Transfer"
+            case .other: "Other"
         }
     }
 }

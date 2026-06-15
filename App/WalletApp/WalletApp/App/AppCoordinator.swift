@@ -69,7 +69,10 @@ final class AppCoordinator {
     
     // TRANSACTIONS
     @ViewBuilder func buildTransaction() -> some View {
-        let vm = TransactionViewModel(transactionRepository: container.transactionRepository)
+        let vm = TransactionViewModel(
+            transactionRepository: container.transactionRepository,
+            csvExportService: container.csvExportService
+        )
         
         TransactionView(viewModel: vm).navigationTitle("Транзакции")
     }

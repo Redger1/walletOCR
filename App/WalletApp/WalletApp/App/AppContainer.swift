@@ -21,10 +21,9 @@ enum AppEnvironment {
 final class AppContainer {
     let transactionRepository: TransactionRepository
     let budgetRepository: BudgetRepository
-    
     let budgetCalculator: BudgetCalculator
-    
     let environment: AppEnvironment
+    let csvExportService: CSVExportServiceProtocol
     
     // Сканирование
     let scanService: ScanService
@@ -36,6 +35,7 @@ final class AppContainer {
     init(environment: AppEnvironment = .mock) {
         self.environment = environment
         self.budgetCalculator = BudgetCalculator()
+        self.csvExportService = CSVExportService()
         
         // Сканирование
         self.scanService = ScanServiceMock()

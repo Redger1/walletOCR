@@ -14,10 +14,10 @@ public enum PaymentMethod: String, Hashable, Sendable, Codable, CaseIterable {
     
     public var title: String {
         switch self {
-            case .card: "Карта"
-            case .cash: "Наличные"
-            case .transfer: "Перевод"
-            case .other: "Другое"
+            case .card: "Card"
+            case .cash: "Cash"
+            case .transfer: "Transfer"
+            case .other: "Other"
         }
     }
 }
@@ -30,10 +30,10 @@ public enum TransactionStatus: String, Sendable, Hashable, Codable, CaseIterable
     
     public var title: String {
         switch self {
-            case .pending: "Черновик"
-            case .posted: "Готово"
-            case .corrected: "Отредактирован"
-            case .deleted: "Удален"
+            case .pending: "Draft"
+            case .posted: "Done"
+            case .corrected: "Edited"
+            case .deleted: "Deleted"
         }
     }
 }

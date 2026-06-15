@@ -1,10 +1,3 @@
-//
-//  TransactionViewModel.swift
-//  WalletApp
-//
-//  Created by Артем on 06.10.2025.
-//
-import SwiftUI
 import Foundation
 import Observation
 import CoreTypes
@@ -12,15 +5,17 @@ import CoreTypes
 @Observable @MainActor
 final class TransactionViewModel {
     private var transactionRepository: TransactionRepository
+    private var csvExportService: CSVExportServiceProtocol
     var transactions: [TransactionItem] = []
+    var exportURL: URL?
     
-    // MARK: - Filter
     var searchText: String = ""
     var selectedCategory: CategoryKind? = nil
     var selectedPeriod: TransactionPeriodFilter = .all
     
-    init(transactionRepository: TransactionRepository) {
+    init(transactionRepository: TransactionRepository, csvExportService: CSVExportServiceProtocol) {
         self.transactionRepository = transactionRepository
+        self.csvExportService = csvExportService
     }
     
     func load() async {
@@ -57,8 +52,8 @@ final class TransactionViewModel {
         })
     }
     
-    var visibleSpentMoney: Decimal {
-        filteredTransactions.reduce(0, { accum, transaction in
+    var filteredTotalSpentMoney: Decimal {
+        filteredTransactions.reduce(0, {  accum, transaction in
             return accum + transaction.total.value
         })
     }
@@ -76,7 +71,6 @@ final class TransactionViewModel {
     }
     
     // MARK: - Filter helpers
-    
     private func matchesCategory(_ transaction: TransactionItem) -> Bool {
         guard let selectedCategory else { return true }
         return transaction.categoryKind == selectedCategory
@@ -114,5 +108,15 @@ final class TransactionViewModel {
             category.contains(query) ||
             note.contains(query) ||
             payment.contains(query)
+    }
+    
+    // MARK: CSV export
+    func exportCSV() {
+        do {
+            exportURL = try csvExportService.createCSVFile(filteredTransactions)
+        } catch {
+            print("CSV export failed", error)
+            exportURL = nil
+        }
     }
 }
